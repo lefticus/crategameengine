@@ -13,8 +13,9 @@ namespace mvc
     public:
       typedef T world_personality;
 
-      engine(view *v, world *w)
+      engine(view<T> *v, world<T> *w)
       {
+        w->register_script_handler(compiled_script_handler<T>());
         attach<run_script_event>(this, w);
         attach<run_named_script_event>(this, w);
         attach<world_changed_event<typename T::change_set> >(w, v);

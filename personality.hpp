@@ -137,8 +137,8 @@ class location
     properties viewproperties;
     properties scriptproperties;
 
-    std::set<objectid<game_object> > gameobjects;
-    std::set<objectid<environmental_object> > environmentalobjects;
+    std::set<object_id<game_object> > gameobjects;
+    std::set<object_id<environmental_object> > environmentalobjects;
 };
 
 template<typename T, typename Iterator>
@@ -159,35 +159,35 @@ struct game_personality
 {
   struct world_reader
   {
-    game_object getobject(const objectid<game_object> &oid) const = 0;
-    environmental_object getobject(const objectid<environmental_object> &oid) const = 0;
-    item getobject(const objectid<item> &oid) const = 0;
-    player getobject(const objectid<player> &oid) const = 0;
-    location getobject(const objectid<location> &oid) const = 0;
+    game_object getobject(const object_id<game_object> &oid) const = 0;
+    environmental_object getobject(const object_id<environmental_object> &oid) const = 0;
+    item getobject(const object_id<item> &oid) const = 0;
+    player getobject(const object_id<player> &oid) const = 0;
+    location getobject(const object_id<location> &oid) const = 0;
 
-    game_object get_game_object(const objectid_base &oid) const
+    game_object get_game_object(const object_id_base &oid) const
     {
-      return getobject(objectid<game_object>(oid));
+      return getobject(object_id<game_object>(oid));
     }
 
-    environmental_object get_environmental_object(const objectid_base &oid) const
+    environmental_object get_environmental_object(const object_id_base &oid) const
     {
-      return getobject(objectid<environmental_object>(oid));
+      return getobject(object_id<environmental_object>(oid));
     }
 
-    item get_item(const objectid_base &oid) const
+    item get_item(const object_id_base &oid) const
     {
-      return getobject(objectid<item>(oid));
+      return getobject(object_id<item>(oid));
     }
 
-    player get_player(const objectid_base &oid) const
+    player get_player(const object_id_base &oid) const
     {
-      return getobject(objectid<player>(oid));
+      return getobject(object_id<player>(oid));
     }
 
-    location get_location(const objectid_base &oid) const
+    location get_location(const object_id_base &oid) const
     {
-      return getobject(objectid<location>(oid));
+      return getobject(object_id<location>(oid));
     }
   };    
 
@@ -203,16 +203,16 @@ struct game_personality
   struct change_set : world_reader, world_writer
   {
     private:
-      std::map<objectid<game_object>, game_object> gameobjects;
-      std::map<objectid<environmental_object>, environmental_object> environmentalobjects;
-      std::map<objectid<item>, item> items;
-      std::map<objectid<player>, player> players;
-      std::map<objectid<location>, location> locations;
+      std::map<object_id<game_object>, game_object> gameobjects;
+      std::map<object_id<environmental_object>, environmental_object> environmentalobjects;
+      std::map<object_id<item>, item> items;
+      std::map<object_id<player>, player> players;
+      std::map<object_id<location>, location> locations;
 
       template<typename T>
-        typename T::object_type getobject_impl(const objectid<T> &oid, const std::map<objectid<T>, typename T::object_type> &m) const
+        typename T::object_type getobject_impl(const object_id<T> &oid, const std::map<object_id<T>, typename T::object_type> &m) const
         {
-          std::map<objectid<T>, typename T::object_type>::const_iterator itr = m.find(oid);
+          std::map<object_id<T>, typename T::object_type>::const_iterator itr = m.find(oid);
           if (itr != m.end())
           {
             return *itr;
@@ -221,30 +221,30 @@ struct game_personality
           }
         }
 
-      objectid<player> currentplayer;
+      object_id<player> currentplayer;
 
     public:
-      virtual game_object getobject(const objectid<game_object> &oid)
+      virtual game_object getobject(const object_id<game_object> &oid)
       {
         return getobject_impl(oid, gameobjects); 
       }
 
-      virtual environmental_object getobject(const objectid<environmental_object> &oid)
+      virtual environmental_object getobject(const object_id<environmental_object> &oid)
       {
         return getobject_impl(oid, environmentalobjects); 
       }
 
-      virtual item getobject(const objectid<item> &oid)
+      virtual item getobject(const object_id<item> &oid)
       {
         return getobject_impl(oid, items); 
       }
 
-      virtual player getobject(const objectid<player> &oid)
+      virtual player getobject(const object_id<player> &oid)
       {
         return getobject_impl(oid, players); 
       }
 
-      virtual location getobject(const objectid<location> &oid)
+      virtual location getobject(const object_id<location> &oid)
       {
         return getobject_impl(oid, locations); 
       }
@@ -296,11 +296,11 @@ struct game_personality
 
   struct world_creator
   {
-    game_object create(const objectid<game_object> &oid) = 0;
-    environmental_object create(const objectid<environmental_object> &oid) = 0;
-    item create(const objectid<item> &oid) = 0;
-    player create(const objectid<player> &oid) = 0;
-    location create(const objectid<location> &oid) = 0;
+    game_object create(const object_id<game_object> &oid) = 0;
+    environmental_object create(const object_id<environmental_object> &oid) = 0;
+    item create(const object_id<item> &oid) = 0;
+    player create(const object_id<player> &oid) = 0;
+    location create(const object_id<location> &oid) = 0;
   };
 
   class view : public event_emitter<event_take_item>,
@@ -363,15 +363,15 @@ struct game_personality
     void take_item(const event_take_item &e)
     {
       vector<object_id> objects;
-      objects.push_back(e.player.objectid);
-      objects.push_back(e.item.objectid);
+      objects.push_back(e.player.object_id);
+      objects.push_back(e.item.object_id);
       emit(event_run_named_script("takeitem", objects, vector<string>()));
     }
 
     void use_item(const event_use_item &e)
     {
       vector<object_id> objects;
-      objects.push_back(e.item.objectid);
+      objects.push_back(e.item.object_id);
       emit(event_run_named_script("useitem", objects, vector<string>()));
     }
   };
@@ -396,37 +396,33 @@ struct game_personality
         m_changeset.merge(cs);
       }
 
-      virtual game_object getobject(const objectid<game_object> &oid)
+      virtual game_object getobject(const object_id<game_object> &oid)
       {
         return m_changeset.getobject(oid); 
       }
 
-      virtual environmental_object getobject(const objectid<environmental_object> &oid)
+      virtual environmental_object getobject(const object_id<environmental_object> &oid)
       {
         return m_changeset.getobject(oid); 
       }
 
-      virtual item getobject(const objectid<item> &oid)
+      virtual item getobject(const object_id<item> &oid)
       {
         return m_changeset.getobject(oid); 
       }
 
-      virtual player getobject(const objectid<player> &oid)
+      virtual player getobject(const object_id<player> &oid)
       {
         return m_changeset.getobject(oid); 
       }
 
-      virtual location getobject(const objectid<location> &oid)
+      virtual location getobject(const object_id<location> &oid)
       {
         return m_changeset.getobject(oid); 
       }
   }
 
   class world_script_access : public world_reader, public world_writer,
-  public event_emitter<CharacterResponseEvent>,
-  public event_emitter<CharacterSpeakEvent>,
-  public event_emitter<AnnoucementEvent>,
-
   {
     private:
       world &m_world;
@@ -456,27 +452,27 @@ struct game_personality
       {
       }
 
-      virtual game_object getobject(const objectid<game_object> &oid)
+      virtual game_object getobject(const object_id<game_object> &oid)
       {
         return getobject_impl(oid); 
       }
 
-      virtual environmental_object getobject(const objectid<environmental_object> &oid)
+      virtual environmental_object getobject(const object_id<environmental_object> &oid)
       {
         return getobject_impl(oid); 
       }
 
-      virtual item getobject(const objectid<item> &oid)
+      virtual item getobject(const object_id<item> &oid)
       {
         return getobject_impl(oid); 
       }
 
-      virtual player getobject(const objectid<player> &oid)
+      virtual player getobject(const object_id<player> &oid)
       {
         return getobject_impl(oid); 
       }
 
-      virtual location getobject(const objectid<location> &oid)
+      virtual location getobject(const object_id<location> &oid)
       {
         return getobject_impl(oid); 
       }

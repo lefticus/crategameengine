@@ -41,14 +41,19 @@ namespace mvc
       {
         typename world_personality::world_script_interface wsi(*this);
         m_script_handlers[m_named_scripts[name] ].execute_named_script(e.name, wsi, e.objects);
-        apply_changeset(wsi.get_change_set());
+        typename world_personality::change_set cs = wsi.get_change_set();
+        apply_changeset(cs);
+        emit(event_world_changed<typename world_personality::change_set>(cs));
       }
 
       void execute_script(const event_run_script &e)
       {
         typename world_personality::world_script_interface wsi(*this);
         m_script_handlers[s.type].execute(e.script, wsi, e.objects);
-        apply_changeset(wsi.get_change_set());
+        typename world_personality::change_set cs = wsi.get_change_set();
+        apply_changeset(cs);
+        emit(event_world_changed<typename world_personality::change_set>(cs));
+
       }
 
   };
