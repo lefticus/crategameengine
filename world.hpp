@@ -31,10 +31,14 @@ namespace mvc
       friend class world_personality::world_script_access;
 
       world()
-        : event_listener<event_run_named_script>(
-            boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_named_script, this, _1)),
-          event_listener<event_run_script>(
-            boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_script, this, _1))
+        : event_listener<event_run_script>(
+            boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_script, this, _1)),
+          event_listener<event_run_named_script>(
+            boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_named_script, this, _1))
+      {
+      }
+
+      virtual ~world()
       {
       }
 

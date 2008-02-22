@@ -184,6 +184,10 @@ struct game_personality
 {
   struct world_reader
   {
+    virtual ~world_reader()
+    {
+    }
+
     virtual game_object getobject(const mvc::object_id<game_object> &oid) const = 0;
     virtual environmental_object getobject(const mvc::object_id<environmental_object> &oid) const = 0;
     virtual item getobject(const mvc::object_id<item> &oid) const = 0;
@@ -218,6 +222,10 @@ struct game_personality
 
   struct world_writer
   {
+    virtual ~world_writer()
+    {
+    }
+
     virtual void update(const game_object &) = 0;
     virtual void update(const environmental_object &) = 0;
     virtual void update(const item &) = 0;
@@ -266,6 +274,10 @@ struct game_personality
       mvc::object_id<player> currentplayer;
 
     public:
+      virtual ~change_set()
+      {
+      }
+
       virtual game_object getobject(const mvc::object_id<game_object> &oid) const
       {
         return getobject_impl(oid, gameobjects); 
@@ -338,6 +350,10 @@ struct game_personality
 
   struct world_creator
   {
+    virtual ~world_creator()
+    {
+    }
+
     virtual game_object create(const mvc::object_id<game_object> &oid) = 0;
     virtual environmental_object create(const mvc::object_id<environmental_object> &oid) = 0;
     virtual item create(const mvc::object_id<item> &oid) = 0;

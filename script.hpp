@@ -38,6 +38,10 @@ namespace mvc
     public: 
       typedef T world_personality;
 
+      virtual ~world_script_access()
+      {
+      }
+
       virtual void execute_script(const script &s, 
           const std::vector<object_id_base> &objects,
           const std::vector<std::string> &strings) = 0;
@@ -56,6 +60,10 @@ namespace mvc
     public:
       script_handler(const std::string &t_name)
         : name(t_name)
+      {
+      }
+
+      virtual ~script_handler()
       {
       }
 
@@ -108,6 +116,10 @@ namespace mvc
       {
       }
 
+      virtual ~compiled_script()
+      {
+      }
+
       void execute(world_script_access<T> &world, 
           const std::vector<object_id_base> &objects,
           const std::vector<std::string> &strings) const
@@ -133,6 +145,10 @@ namespace mvc
       {
       }
 
+      virtual ~compiled_script_handler()
+      {
+      }
+
 
       struct not_a_compiled_script : script_handler<T>::invalid_script
       {
@@ -142,7 +158,7 @@ namespace mvc
         }
       };
 
-      void register_named_script(const script &s)
+      virtual void register_named_script(const script &s)
       {
         try { 
           typename script_map::iterator itr = m_named_scripts.find(s.name);
@@ -157,7 +173,7 @@ namespace mvc
         }
       }
 
-      void execute_named_script(
+      virtual void execute_named_script(
           const std::string &name, 
           world_script_access<T> &world, 
           const std::vector<object_id_base> &objects,
@@ -174,7 +190,7 @@ namespace mvc
         }
       }
 
-      void execute(const script &script, 
+      virtual void execute(const script &script, 
           world_script_access<T> &world, 
           const std::vector<object_id_base> &objects,
           const std::vector<std::string> &strings) 
@@ -186,7 +202,7 @@ namespace mvc
         }
       }
 
-      boost::shared_ptr<script_handler<world_personality> > clone() const
+      virtual boost::shared_ptr<script_handler<world_personality> > clone() const
       {
         return boost::shared_ptr<script_handler<world_personality> >(new compiled_script_handler(*this));
       }

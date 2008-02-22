@@ -20,6 +20,10 @@ namespace mvc
       {
       }
 
+      virtual ~view()
+      {
+      }
+
     private:
       virtual void before_world_changed(const event_world_changed<typename T::change_set> &e) = 0;
       virtual void after_world_changed(const event_world_changed<typename T::change_set> &e) = 0;
