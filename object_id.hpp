@@ -43,6 +43,11 @@ namespace mvc
     {
     }
 
+    object_id(const object_type &t_obj)
+      : object_id_base(t_obj.oid)
+    {
+    }
+
     object_id()
       : object_id_base(T::class_name, "")
     {

@@ -352,6 +352,7 @@ namespace game_personality
     class view : public mvc::view< personality >,
                  public mvc::event_emitter<event_take_item>,
                  public mvc::event_emitter<event_use_item>,
+                 public mvc::event_emitter<event_use_item_with>,
                  public mvc::event_emitter<event_talk_to_character>,
                  public mvc::event_emitter<event_ask_character>,
                  public mvc::event_emitter<event_move_to>,
@@ -387,6 +388,7 @@ namespace game_personality
 
     struct engine : public mvc::event_listener<event_take_item>,
                     public mvc::event_listener<event_use_item>,
+                    public mvc::event_listener<event_use_item_with>,
                     public mvc::event_listener<event_talk_to_character>,
                     public mvc::event_listener<event_ask_character>,
                     public mvc::event_listener<event_move_to>,
@@ -398,6 +400,8 @@ namespace game_personality
             boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::take_item, this, _1)),
           mvc::event_listener<event_use_item>(
             boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::use_item, this, _1)),
+          mvc::event_listener<event_use_item_with>(
+            boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::use_item_with, this, _1)),
           mvc::event_listener<event_talk_to_character>(
             boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::talk_to_character, this, _1)),
           mvc::event_listener<event_ask_character>(
@@ -408,6 +412,7 @@ namespace game_personality
       {
         mvc::attach<event_take_item>(v, *this);
         mvc::attach<event_use_item>(v, *this);
+        mvc::attach<event_use_item_with>(v, *this);
         mvc::attach<event_talk_to_character>(v, *this);
         mvc::attach<event_ask_character>(v, *this);
         mvc::attach<event_move_to>(v, *this);
@@ -430,6 +435,14 @@ namespace game_personality
   //      objects.push_back(e.item.mvc::object_id);
   //      emit(event_run_named_script("useitem", objects, vector<string>()));
       }
+
+      void use_item_with(const event_use_item_with &e)
+      {
+  //      std::vector<mvc::object_id_base> objects;
+  //      objects.push_back(e.item.mvc::object_id);
+  //      emit(event_run_named_script("useitem", objects, vector<string>()));
+      }
+
 
       void talk_to_character(const event_talk_to_character &e)
       {
