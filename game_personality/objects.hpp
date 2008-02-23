@@ -9,160 +9,162 @@
 #include <set>
 #include <map>
 
-class properties : private std::map<std::string, std::string>
+namespace game_personality
 {
-  public:
-    template<typename wrappedtype, typename interfacetype>
-      class lexical_cast_wrapper
+  class properties : private std::map<std::string, std::string>
+  {
+    public:
+      template<typename wrappedtype, typename interfacetype>
+        class lexical_cast_wrapper
+        {
+          friend class properties;
+
+          public:
+          lexical_cast_wrapper(wrappedtype &v)
+            : m_value(v)
+          {
+          }
+
+          const interfacetype operator=(const interfacetype& value)
+          {
+            m_value = boost::lexical_cast<wrappedtype>(value);
+          }
+
+          operator const interfacetype() const
+          {
+            return boost::lexical_cast<interfacetype>(m_value);
+          }
+
+          private:
+          wrappedtype &m_value;
+        };
+
+      using std::map<std::string, std::string>::operator[];
+
+      template<typename T>
+        lexical_cast_wrapper<std::string, T> get(const std::string &key)
+        {
+          return lexical_cast_wrapper<std::string, T>(operator[](key));
+        }
+  };
+
+  class item
+  {
+    public:
+      static const char class_name[];
+
+      item(const mvc::object_id<item> &id)
+        : oid(id)
       {
-        friend class properties;
-
-        public:
-        lexical_cast_wrapper(wrappedtype &v)
-          : m_value(v)
-        {
-        }
-
-        const interfacetype operator=(const interfacetype& value)
-        {
-          m_value = boost::lexical_cast<wrappedtype>(value);
-        }
-
-        operator const interfacetype() const
-        {
-          return boost::lexical_cast<interfacetype>(m_value);
-        }
-
-        private:
-        wrappedtype &m_value;
-      };
-
-    using std::map<std::string, std::string>::operator[];
-
-    template<typename T>
-      lexical_cast_wrapper<std::string, T> get(const std::string &key)
-      {
-        return lexical_cast_wrapper<std::string, T>(operator[](key));
       }
-};
 
-class item
-{
-  public:
-    static const char class_name[];
+      mvc::object_id<item> oid;
+      std::string name;
+      std::string description;
+      properties viewproperties;
+      properties scriptproperties;
 
-    item(const mvc::object_id<item> &id)
-      : oid(id)
-    {
-    }
+      mvc::script usescript;
+  };
 
-    mvc::object_id<item> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
+  struct position
+  {
+    int x;
+    int y;
+  };
 
-    mvc::script usescript;
-};
+  class conversation_tree
+  {
+  };
 
-struct position
-{
-  int x;
-  int y;
-};
+  class location;
 
-class conversation_tree
-{
-};
+  class game_object
+  {
+    public:
+      static const char class_name[];
+      game_object(const mvc::object_id<game_object> &id)
+        : oid(id)
+      {
+      }
 
-class location;
+      mvc::object_id<game_object> oid;
+      std::string name;
+      std::string description;
+      properties viewproperties;
+      properties scriptproperties;
 
-class game_object
-{
-  public:
-    static const char class_name[];
-    game_object(const mvc::object_id<game_object> &id)
-      : oid(id)
-    {
-    }
+      bool walkable;
 
-    mvc::object_id<game_object> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
+      position location_position;
+      conversation_tree object_conversation_tree;
+      std::set<mvc::object_id<item> > items;
 
-    bool walkable;
+      mvc::object_id<location> linkedlocation;
+      position linkedpositionatlocation;
 
-    position location_position;
-    conversation_tree object_conversation_tree;
-    std::set<mvc::object_id<item> > items;
+      mvc::script enterscript;
+      mvc::script leavescript;
+  };
 
-    mvc::object_id<location> linkedlocation;
-    position linkedpositionatlocation;
+  class environmental_object
+  {
+    public:
+      static const char class_name[];
+      environmental_object(const mvc::object_id<environmental_object> &id)
+        : oid(id)
+      {
+      }
 
-    mvc::script enterscript;
-    mvc::script leavescript;
-};
+      mvc::object_id<environmental_object> oid;
+      std::string name;
+      std::string description;
+      properties viewproperties;
+      properties scriptproperties;
 
-class environmental_object
-{
-  public:
-    static const char class_name[];
-    environmental_object(const mvc::object_id<environmental_object> &id)
-      : oid(id)
-    {
-    }
-
-    mvc::object_id<environmental_object> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
-
-    position location_position;
-};
+      position location_position;
+  };
 
 
-class location
-{
-  public:
-    static const char class_name[];
-    location(const mvc::object_id<location> &id)
-      : oid(id)
-    {
-    }
+  class location
+  {
+    public:
+      static const char class_name[];
+      location(const mvc::object_id<location> &id)
+        : oid(id)
+      {
+      }
 
-    mvc::object_id<location> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
+      mvc::object_id<location> oid;
+      std::string name;
+      std::string description;
+      properties viewproperties;
+      properties scriptproperties;
 
-    std::set<mvc::object_id<game_object> > gameobjects;
-    std::set<mvc::object_id<environmental_object> > environmentalobjects;
-};
+      std::set<mvc::object_id<game_object> > gameobjects;
+      std::set<mvc::object_id<environmental_object> > environmentalobjects;
+  };
 
-class player
-{
-  public:
-    static const char class_name[];
-    player(const mvc::object_id<player> &id)
-      : oid(id)
-    {
-    }
+  class player
+  {
+    public:
+      static const char class_name[];
+      player(const mvc::object_id<player> &id)
+        : oid(id)
+      {
+      }
 
-    mvc::object_id<player> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
+      mvc::object_id<player> oid;
+      std::string name;
+      std::string description;
+      properties viewproperties;
+      properties scriptproperties;
 
-    std::set<mvc::object_id<item> > items;
+      std::set<mvc::object_id<item> > items;
 
-    mvc::object_id<location> currentlocation;
-    position currentposition;
-};
-
+      mvc::object_id<location> currentlocation;
+      position currentposition;
+  };
+}
 
 #endif
