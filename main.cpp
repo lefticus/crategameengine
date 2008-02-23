@@ -1,4 +1,4 @@
-#include "personality.hpp"
+#include "game_personality/personality.hpp"
 
 class worldimpl : public game_personality::world
 {
@@ -68,15 +68,15 @@ class viewimpl : public game_personality::view
   {
   }
 
-  void character_response(const game_personality::event_character_response&)
+  void character_response(const event_character_response&)
   {
   }
 
-  void character_speak(const game_personality::event_character_speak&)
+  void character_speak(const event_character_speak&)
   {
   }
 
-  void announcement(const game_personality::event_announcement&)
+  void announcement(const event_announcement&)
   {
   }
 };

@@ -1,7 +1,11 @@
-#ifndef __personality__
-#define __personality__
+#ifndef __game_personality_personality_hpp__
+#define __game_personality_personality_hpp__
+
+#include "events.hpp"
+#include "objects.hpp"
 
 #include "object_id.hpp"
+
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <set>
@@ -10,160 +14,7 @@
 #include "view.hpp"
 #include "engine.hpp"
 
-class properties : private std::map<std::string, std::string>
-{
-  public:
-    template<typename wrappedtype, typename interfacetype>
-      class lexical_cast_wrapper
-      {
-        friend class properties;
 
-        public:
-        lexical_cast_wrapper(wrappedtype &v)
-          : m_value(v)
-        {
-        }
-
-        const interfacetype operator=(const interfacetype& value)
-        {
-          m_value = boost::lexical_cast<wrappedtype>(value);
-        }
-
-        operator const interfacetype() const
-        {
-          return boost::lexical_cast<interfacetype>(m_value);
-        }
-
-        private:
-        wrappedtype &m_value;
-      };
-
-    using std::map<std::string, std::string>::operator[];
-
-    template<typename T>
-      lexical_cast_wrapper<std::string, T> get(const std::string &key)
-      {
-        return lexical_cast_wrapper<std::string, T>(operator[](key));
-      }
-};
-
-class item
-{
-  public:
-    static const char class_name[];
-
-    item(const mvc::object_id<item> &id)
-      : oid(id)
-    {
-    }
-
-    mvc::object_id<item> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
-
-    mvc::script usescript;
-};
-
-struct position
-{
-  int x;
-  int y;
-};
-
-class conversation_tree
-{
-};
-
-class location;
-
-class game_object
-{
-  public:
-    static const char class_name[];
-    game_object(const mvc::object_id<game_object> &id)
-      : oid(id)
-    {
-    }
-
-    mvc::object_id<game_object> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
-
-    bool walkable;
-
-    position location_position;
-    conversation_tree object_conversation_tree;
-    std::set<mvc::object_id<item> > items;
-
-    mvc::object_id<location> linkedlocation;
-    position linkedpositionatlocation;
-
-    mvc::script enterscript;
-    mvc::script leavescript;
-};
-
-class environmental_object
-{
-  public:
-    static const char class_name[];
-    environmental_object(const mvc::object_id<environmental_object> &id)
-      : oid(id)
-    {
-    }
-
-    mvc::object_id<environmental_object> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
-
-    position location_position;
-};
-
-
-class location
-{
-  public:
-    static const char class_name[];
-    location(const mvc::object_id<location> &id)
-      : oid(id)
-    {
-    }
-
-    mvc::object_id<location> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
-
-    std::set<mvc::object_id<game_object> > gameobjects;
-    std::set<mvc::object_id<environmental_object> > environmentalobjects;
-};
-
-class player
-{
-  public:
-    static const char class_name[];
-    player(const mvc::object_id<player> &id)
-      : oid(id)
-    {
-    }
-
-    mvc::object_id<player> oid;
-    std::string name;
-    std::string description;
-    properties viewproperties;
-    properties scriptproperties;
-
-    std::set<mvc::object_id<item> > items;
-
-    mvc::object_id<location> currentlocation;
-    position currentposition;
-};
 
 
 template<typename T, typename T2, typename Iterator>
@@ -178,7 +29,6 @@ void merge(std::map<T, T2> &dest, Iterator begin, Iterator end)
 
   dest.insert(begin, end);
 }
-
 
 struct game_personality
 {
@@ -360,16 +210,6 @@ struct game_personality
     virtual player create(const mvc::object_id<player> &oid) = 0;
     virtual location create(const mvc::object_id<location> &oid) = 0;
   };
-
-
-  class event_take_item{};
-  class event_use_item{};
-  class event_talk_to_character{};
-  class event_ask_character{};
-  class event_move_to{};
-  class event_character_response{};
-  class event_character_speak{};
-  class event_announcement{};
 
 
 
@@ -601,8 +441,6 @@ struct game_personality
     {
     }
   };
-
-
 };
 
 #endif

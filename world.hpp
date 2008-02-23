@@ -16,6 +16,10 @@ namespace mvc
     {
     }
 
+    virtual ~object_not_found() throw()
+    {
+    }
+
     object_id_base oid;
   };
 
