@@ -3,16 +3,46 @@
 
 #include <boost/function.hpp>
 #include <boost/bind.hpp>
+#include <boost/thread.hpp>
 #include <vector>
+#include "queue.hpp"
 
 namespace mvc
 {
   class event_handler
   {
     public:
-      void queue_event(const boost::function<void ()> &)
+      ~event_handler()
       {
+        m_queue.cancel_get();
+        if (m_thread)
+        {
+          m_thread->join();
+        }
       }
+
+      void queue_event(const boost::function<void ()> &e)
+      {
+        m_queue.add(e);
+      }
+
+      void run()
+      {
+        while (true)
+        {
+          m_queue.get_next()();
+        }
+      }
+
+      void start()
+      {
+        m_thread = boost::shared_ptr<boost::thread>(
+            new boost::thread(boost::bind(&event_handler::run, this)));
+      }
+
+    private:
+      queue<boost::function<void ()> > m_queue;
+      boost::shared_ptr<boost::thread> m_thread;
   };
 
   template<typename event_type>
