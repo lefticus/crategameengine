@@ -3,6 +3,7 @@
 
 #include "events.hpp"
 #include "objects.hpp"
+#include "logger.hpp"
 
 #include "object_id.hpp"
 
@@ -349,7 +350,7 @@ namespace game_personality
 
     };
 
-    class view : public mvc::view< personality >,
+    class view : public mvc::view<personality>,
                  public mvc::event_emitter<event_take_item>,
                  public mvc::event_emitter<event_use_item>,
                  public mvc::event_emitter<event_use_item_with>,
@@ -361,17 +362,22 @@ namespace game_personality
                  public mvc::event_listener<event_announcement>
       {
       public: 
-        view()
-          : mvc::event_listener<event_character_response>(
+        view(const boost::function<void (mvc::logger::log_level, const std::string &, const std::string &)> 
+                   &t_logger)
+          : mvc::view<personality>(t_logger),
+            mvc::event_listener<event_character_response>(
               boost::bind(&view::queue_event, this, _1), boost::bind(&view::character_response, this, _1)),
             mvc::event_listener<event_character_speak>(
               boost::bind(&view::queue_event, this, _1), boost::bind(&view::character_speak, this, _1)),
             mvc::event_listener<event_announcement>(
-              boost::bind(&view::queue_event, this, _1), boost::bind(&view::announcement, this, _1)) 
+              boost::bind(&view::queue_event, this, _1), boost::bind(&view::announcement, this, _1)), 
+            m_logger(boost::bind(t_logger, _1, "game_personality::view", _2))
         {
         }
 
       private:
+        boost::function<void (mvc::logger::log_level, const std::string &)> m_logger;
+
         virtual void character_response(const event_character_response &e) = 0;
         virtual void character_speak(const event_character_speak &e) = 0;
         virtual void announcement(const event_announcement &e) = 0;
@@ -384,19 +390,32 @@ namespace game_personality
                   public mvc::event_emitter<event_announcement>,
                   public mvc::world<personality>
     {
+      public: 
+        world(const boost::function<void (mvc::logger::log_level, const std::string &, const std::string &)> 
+                   &t_logger)
+          : mvc::world<personality>(t_logger),
+            m_logger(boost::bind(t_logger, _1, "game_personality::world", _2))
+        {
+        }
+
+      private:
+        boost::function<void (mvc::logger::log_level, const std::string &)> m_logger;
+
     };
 
-    struct engine : public mvc::event_listener<event_take_item>,
+    struct engine : public mvc::engine<personality>,
+                    public mvc::event_listener<event_take_item>,
                     public mvc::event_listener<event_use_item>,
                     public mvc::event_listener<event_use_item_with>,
                     public mvc::event_listener<event_talk_to_character>,
                     public mvc::event_listener<event_ask_character>,
                     public mvc::event_listener<event_move_to>,
-                    public mvc::event_handler,
-                    public mvc::engine<personality>
+                    public mvc::event_handler
     {
-      engine(view &v, world &w)
-        : mvc::event_listener<event_take_item>(
+      engine(const boost::function<void (mvc::logger::log_level, const std::string &, const std::string &)> 
+                   &t_logger, view &v, world &w)
+        : mvc::engine<personality>(t_logger, v, w),
+          mvc::event_listener<event_take_item>(
             boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::take_item, this, _1)),
           mvc::event_listener<event_use_item>(
             boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::use_item, this, _1)),
@@ -408,8 +427,9 @@ namespace game_personality
             boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::ask_character, this, _1)),
           mvc::event_listener<event_move_to>(
             boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::move_to, this, _1)),
-          mvc::engine< personality >(v, w)
+          m_logger(boost::bind(t_logger, _1, "game_personality::engine", _2))
       {
+        m_logger(mvc::logger::debug, "constructor called");
         mvc::attach<event_take_item>(v, *this);
         mvc::attach<event_use_item>(v, *this);
         mvc::attach<event_use_item_with>(v, *this);
@@ -423,6 +443,7 @@ namespace game_personality
 
       void take_item(const event_take_item &e)
       {
+        m_logger(mvc::logger::info, "take_item event called");
   //      std::vector<mvc::object_id_base> objects;
   //      objects.push_back(e.player.mvc::object_id);
   //      objects.push_back(e.item.mvc::object_id);
@@ -455,6 +476,8 @@ namespace game_personality
       void move_to(const event_move_to &e)
       {
       }
+
+      boost::function<void (mvc::logger::log_level, const std::string &)> m_logger;
     };
   };
 }

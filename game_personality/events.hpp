@@ -5,7 +5,7 @@
 
 namespace game_personality
 {
-  class event_take_item
+  struct event_take_item
   {
     event_take_item(const mvc::object_id<player> &t_player,
                     const mvc::object_id<item> &t_item)
@@ -18,7 +18,7 @@ namespace game_personality
     mvc::object_id<item> item_to_take;
   };
 
-  class event_use_item
+  struct event_use_item
   {
     event_use_item(const mvc::object_id<player> &t_player,
                    const mvc::object_id<item> &t_item)
@@ -31,7 +31,7 @@ namespace game_personality
     mvc::object_id<item> item_to_use;
   };
 
-  class event_use_item_with
+  struct event_use_item_with
   {
     event_use_item_with(const mvc::object_id<player> &t_player,
                         const mvc::object_id<item> &t_item,
@@ -47,8 +47,7 @@ namespace game_personality
     mvc::object_id<item> item_to_use_with;
   };
 
-
-  class event_talk_to_character
+  struct event_talk_to_character
   {
     event_talk_to_character(const mvc::object_id<game_object> &t_object)
       : character_to_talk_to(t_object)
@@ -58,7 +57,7 @@ namespace game_personality
     mvc::object_id<game_object> character_to_talk_to;
   };
 
-  class event_ask_character
+  struct event_ask_character
   {
     event_ask_character(const mvc::object_id<game_object> &t_object,
                         const std::string &t_question)
@@ -71,7 +70,7 @@ namespace game_personality
     std::string question;
   };
 
-  class event_character_response
+  struct event_character_response
   {
     event_character_response(const mvc::object_id<game_object> &t_character,
                              const std::vector<std::string> &t_responses)
@@ -84,7 +83,7 @@ namespace game_personality
     std::vector<std::string> responses;
   };
 
-  class event_character_speak
+  struct event_character_speak
   {
     event_character_speak(const mvc::object_id<game_object> &t_character,
                              const std::vector<std::string> &t_messages)
@@ -97,7 +96,7 @@ namespace game_personality
     std::vector<std::string> messages;
   };
 
-  class event_move_to
+  struct event_move_to
   {
     event_move_to(const mvc::object_id<player> &t_player,
                   const mvc::object_id<game_object> &t_move_to)
@@ -110,7 +109,7 @@ namespace game_personality
     mvc::object_id<game_object> object_to_move_to;
   };
 
-  class event_announcement
+  struct event_announcement
   {
     event_announcement(const std::vector<std::string> &t_messages)
       : messages(t_messages)

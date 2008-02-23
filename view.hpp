@@ -3,6 +3,7 @@
 
 #include <script.hpp>
 #include <event.hpp>
+#include "logger.hpp"
 
 namespace mvc
 {
@@ -14,9 +15,11 @@ namespace mvc
     public:
       typedef T world_personality;
 
-      view()
+      view(const boost::function<void (logger::log_level, const std::string &, const std::string &)> 
+                   &t_logger)
         : event_listener<event_world_changed<typename T::change_set> >(
-            boost::bind(&view::queue_event, this, _1), boost::bind(&view::handle_world_changed, this, _1))
+            boost::bind(&view::queue_event, this, _1), boost::bind(&view::handle_world_changed, this, _1)),
+          m_logger(boost::bind(t_logger, _1, "mvc::view", _2))
       {
       }
 
@@ -25,6 +28,8 @@ namespace mvc
       }
 
     private:
+      boost::function<void (logger::log_level, const std::string &)> m_logger;
+
       virtual void before_world_changed(const event_world_changed<typename T::change_set> &e) = 0;
       virtual void after_world_changed(const event_world_changed<typename T::change_set> &e) = 0;
 

@@ -1,6 +1,7 @@
 #ifndef __mvc_world__
 #define __mvc_world__
 
+#include "logger.hpp"
 #include <script.hpp>
 #include <event.hpp>
 #include <mvc_events.hpp>
@@ -34,11 +35,13 @@ namespace mvc
       typedef T world_personality;
       friend class world_personality::world_script_access;
 
-      world()
+      world(const boost::function<void (logger::log_level, const std::string &, const std::string &)> 
+                   &t_logger)
         : event_listener<event_run_script>(
             boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_script, this, _1)),
           event_listener<event_run_named_script>(
-            boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_named_script, this, _1))
+            boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_named_script, this, _1)),
+          m_logger(boost::bind(t_logger, _1, "mvc::world", _2))
       {
       }
 
@@ -95,6 +98,9 @@ namespace mvc
 
       std::map<std::string, boost::shared_ptr<script_handler<T> > > m_script_handlers;
       std::map<std::string, std::string> m_named_scripts;
+
+    private:
+      boost::function<void (logger::log_level, const std::string &)> m_logger;
   };
 }
 
