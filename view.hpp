@@ -19,6 +19,7 @@ namespace mvc
                    &t_logger)
         : event_listener<event_world_changed<typename T::change_set> >(
             boost::bind(&view::queue_event, this, _1), boost::bind(&view::handle_world_changed, this, _1)),
+          event_handler(boost::bind(t_logger, _1, "mvc::view::event_handler", _2)),
           m_logger(boost::bind(t_logger, _1, "mvc::view", _2))
       {
       }

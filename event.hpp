@@ -5,6 +5,8 @@
 #include <boost/bind.hpp>
 #include <boost/thread.hpp>
 #include <vector>
+#include <string>
+#include "logger.hpp"
 #include "queue.hpp"
 
 namespace mvc
@@ -12,6 +14,11 @@ namespace mvc
   class event_handler
   {
     public:
+      event_handler(const boost::function<void (logger::log_level, const std::string &)> &t_logger)
+        : m_logger(t_logger)
+      {
+      }
+
       ~event_handler()
       {
         m_queue.cancel_get();
@@ -30,7 +37,18 @@ namespace mvc
       {
         while (true)
         {
-          m_queue.get_next()();
+          try {
+            m_queue.get_next()();
+          } catch (const queue_read_canceled &) {
+            m_logger(logger::notice, "queue shutdown, exiting");
+            break;
+          } catch (const std::exception &e) {
+            m_logger(logger::error, std::string("standard exception thrown during event handling: ")
+                + e.what());
+          } catch (...) {
+            m_logger(logger::critical, "unknown exception thrown during event handling!");
+          }
+
         }
       }
 
@@ -43,6 +61,7 @@ namespace mvc
     private:
       queue<boost::function<void ()> > m_queue;
       boost::shared_ptr<boost::thread> m_thread;
+      boost::function<void (logger::log_level, const std::string &)> m_logger;
   };
 
   template<typename event_type>

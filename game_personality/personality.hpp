@@ -409,8 +409,7 @@ namespace game_personality
                     public mvc::event_listener<event_use_item_with>,
                     public mvc::event_listener<event_talk_to_character>,
                     public mvc::event_listener<event_ask_character>,
-                    public mvc::event_listener<event_move_to>,
-                    public mvc::event_handler
+                    public mvc::event_listener<event_move_to>
     {
       engine(const boost::function<void (mvc::logger::log_level, const std::string &, const std::string &)> 
                    &t_logger, view &v, world &w)

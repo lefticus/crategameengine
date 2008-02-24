@@ -32,6 +32,14 @@ namespace mvc
       public event_handler
   {  
     public:
+      struct unknown_named_script : std::runtime_error
+      {
+        unknown_named_script(const std::string &t_name)
+          : std::runtime_error("uknown named script: " + t_name)
+        {
+        }
+      };
+
       typedef T world_personality;
       friend class world_personality::world_script_access;
 
@@ -41,6 +49,7 @@ namespace mvc
             boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_script, this, _1)),
           event_listener<event_run_named_script>(
             boost::bind(&world::queue_event, this, _1), boost::bind(&world::execute_named_script, this, _1)),
+          event_handler(boost::bind(t_logger, _1, "mvc::world::event_handler", _2)),
           m_logger(boost::bind(t_logger, _1, "mvc::world", _2))
       {
       }
@@ -79,8 +88,16 @@ namespace mvc
                                 const std::vector<object_id_base> &objects,
                                 const std::vector<std::string> &strings)
       {
+        std::map<std::string, std::string>::const_iterator itr = 
+          m_named_scripts.find(name);
+
+        if (itr == m_named_scripts.end())
+        {
+          throw unknown_named_script(name);
+        }
+
         typename world_personality::world_script_access wsi(*this);
-        m_script_handlers[m_named_scripts[name] ]->execute_named_script(name, wsi, objects, strings);
+        m_script_handlers[itr->second]->execute_named_script(name, wsi, objects, strings);
         typename world_personality::change_set cs = wsi.get_change_set();
         apply_change_set(cs);
         this->emit(event_world_changed<typename world_personality::change_set>(cs));
