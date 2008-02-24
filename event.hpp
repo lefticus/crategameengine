@@ -100,5 +100,11 @@ namespace mvc
   {
     emitter.attach_listener(listener);
   }
+
+  template<typename event_type>
+  void emit(event_emitter<event_type> &emitter, const event_type &event)
+  {
+    emitter.emit(event);
+  }
 }
 #endif

@@ -66,6 +66,7 @@ namespace mvc
 
       void execute_named_script(const event_run_named_script &e)
       {
+        m_logger(logger::info, "execute named script event: " + e.name);
         execute_named_script(e.name, e.objects, e.strings);
       }
 
@@ -82,7 +83,7 @@ namespace mvc
         m_script_handlers[m_named_scripts[name] ]->execute_named_script(name, wsi, objects, strings);
         typename world_personality::change_set cs = wsi.get_change_set();
         apply_change_set(cs);
-        emit(event_world_changed<typename world_personality::change_set>(cs));
+        this->emit(event_world_changed<typename world_personality::change_set>(cs));
       }
 
       void execute_script(const script &script_to_run,
@@ -93,7 +94,7 @@ namespace mvc
         m_script_handlers[script_to_run.type]->execute(script_to_run, wsi, objects, strings);
         typename world_personality::change_set cs = wsi.get_change_set();
         apply_change_set(cs);
-        emit(event_world_changed<typename world_personality::change_set>(cs));
+        this->emit(event_world_changed<typename world_personality::change_set>(cs));
       }
 
       std::map<std::string, boost::shared_ptr<script_handler<T> > > m_script_handlers;

@@ -141,7 +141,7 @@ int main(int, char **)
   w.start();
   v.start();
 
-  dynamic_cast<mvc::event_emitter<game_personality::event_take_item> &>(v).emit(game_personality::event_take_item(
+  mvc::emit<game_personality::event_take_item>(v, game_personality::event_take_item(
         w.create(mvc::object_id<game_personality::player>()),
         w.create(mvc::object_id<game_personality::item>())));
 

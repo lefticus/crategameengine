@@ -444,10 +444,11 @@ namespace game_personality
       void take_item(const event_take_item &e)
       {
         m_logger(mvc::logger::info, "take_item event called");
-  //      std::vector<mvc::object_id_base> objects;
-  //      objects.push_back(e.player.mvc::object_id);
-  //      objects.push_back(e.item.mvc::object_id);
-  //      emit(event_run_named_script("takeitem", objects, vector<string>()));
+        std::vector<mvc::object_id_base> objects;
+        objects.push_back(e.taking_player);
+        objects.push_back(e.item_to_take);
+        mvc::emit<mvc::event_run_named_script>(*this, 
+            mvc::event_run_named_script("takeitem", objects, std::vector<std::string>()));
       }
 
       void use_item(const event_use_item &e)
