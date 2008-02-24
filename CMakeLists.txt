@@ -12,8 +12,10 @@ IF (DOXYGEN_FOUND)
   EXECUTE_PROCESS(COMMAND ${DOXYGEN_EXECUTABLE} OUTPUT_QUIET)
 ENDIF (DOXYGEN_FOUND)
 
-SET (PERSONALITY_SRCS game_personality/personality.cpp)
-SET (MAIN_SRCS main.cpp)
+#SET (PERSONALITY_SRCS game_personality/personality.cpp)
+#SET (MAIN_SRCS main.cpp)
+FILE (GLOB PERSONALITY_SRCS game_personality/*.cpp)
+FILE (GLOB MAIN_SRCS *.cpp)
 
 INCLUDE_DIRECTORIES (. ./game_personality)
 ADD_EXECUTABLE (crategameengine ${MAIN_SRCS} ${PERSONALITY_SRCS})
