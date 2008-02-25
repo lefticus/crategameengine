@@ -4,13 +4,15 @@ INCLUDE (FindDoxygen)
 
 IF (APPLE)
   INCLUDE_DIRECTORIES (/usr/local/include/boost-1_34)
-  LINK_DIRECTORIES (/usr/local/lib)
 ENDIF (APPLE)
 
-IF (DOXYGEN_FOUND)
-  MESSAGE(STATUS "Running doxygen...")
-  EXECUTE_PROCESS(COMMAND ${DOXYGEN_EXECUTABLE} OUTPUT_QUIET)
-ENDIF (DOXYGEN_FOUND)
+FIND_LIBRARY(BOOST_THREAD_LIBRARY_DEBUG NAMES boost_thread-mt-d boost_thread-d 
+  PATHS  /usr/lib /usr/local/lib)
+FIND_LIBRARY(BOOST_THREAD_LIBRARY_RELEASE NAMES boost_thread-mt boost_thread
+  PATHS  /usr/lib /usr/local/lib)
+
+SET (LINK_LIBS_DEBUG ${BOOST_THREAD_LIBRARY_DEBUG})
+SET (LINK_LIBS_RELEASE ${BOOST_THREAD_LIBRARY_RELEASE})
 
 #SET (PERSONALITY_SRCS game_personality/personality.cpp)
 #SET (MAIN_SRCS main.cpp)
@@ -19,8 +21,7 @@ FILE (GLOB MAIN_SRCS *.cpp)
 
 INCLUDE_DIRECTORIES (. ./game_personality)
 ADD_EXECUTABLE (crategameengine ${MAIN_SRCS} ${PERSONALITY_SRCS})
-IF (APPLE)
-  TARGET_LINK_LIBRARIES (crategameengine boost_thread-mt)
-ELSE (APPLE) 
-  TARGET_LINK_LIBRARIES (crategameengine boost_thread)
-ENDIF (APPLE)
+TARGET_LINK_LIBRARIES (crategameengine debug ${LINK_LIBS_DEBUG} optimized ${LINK_LIBS_RELEASE})
+IF (DOXYGEN_FOUND)
+  ADD_CUSTOM_COMMAND(TARGET crategameengine POST_BUILD COMMAND ${DOXYGEN_EXECUTABLE}) 
+ENDIF (DOXYGEN_FOUND)
