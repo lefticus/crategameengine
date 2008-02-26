@@ -2,6 +2,10 @@ PROJECT (crategameengine)
 
 INCLUDE (FindDoxygen)
 
+IF (CMAKE_COMPILER_IS_GNUCXX)
+  set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+ENDIF (CMAKE_COMPILER_IS_GNUCXX)
+
 IF (APPLE)
   INCLUDE_DIRECTORIES (/usr/local/include/boost-1_34)
 ENDIF (APPLE)
