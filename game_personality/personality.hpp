@@ -444,37 +444,64 @@ namespace game_personality
       {
         m_logger(mvc::logger::info, "take_item event called");
         std::vector<mvc::object_id_base> objects;
-        objects.push_back(e.taking_player);
-        objects.push_back(e.item_to_take);
+        objects.push_back(e.m_player);
+        objects.push_back(e.m_item);
         mvc::emit<mvc::event_run_named_script>(*this, 
-            mvc::event_run_named_script("takeitem", objects, std::vector<std::string>()));
+            mvc::event_run_named_script("take_item", objects, std::vector<std::string>()));
       }
 
       void use_item(const event_use_item &e)
       {
-  //      std::vector<mvc::object_id_base> objects;
-  //      objects.push_back(e.item.mvc::object_id);
-  //      emit(event_run_named_script("useitem", objects, vector<string>()));
+        m_logger(mvc::logger::info, "use_item event called");
+        std::vector<mvc::object_id_base> objects;
+        objects.push_back(e.m_player);
+        objects.push_back(e.m_item);
+        mvc::emit<mvc::event_run_named_script>(*this, 
+            mvc::event_run_named_script("use_item", objects, std::vector<std::string>()));
       }
 
       void use_item_with(const event_use_item_with &e)
       {
-  //      std::vector<mvc::object_id_base> objects;
-  //      objects.push_back(e.item.mvc::object_id);
-  //      emit(event_run_named_script("useitem", objects, vector<string>()));
+        m_logger(mvc::logger::info, "use_item_with event called");
+        std::vector<mvc::object_id_base> objects;
+        objects.push_back(e.m_player);
+        objects.push_back(e.m_item);
+        objects.push_back(e.m_item_with);
+        mvc::emit<mvc::event_run_named_script>(*this, 
+            mvc::event_run_named_script("use_item_with", objects, std::vector<std::string>()));
       }
 
 
       void talk_to_character(const event_talk_to_character &e)
       {
+        m_logger(mvc::logger::info, "talk_to_character event called");
+        std::vector<mvc::object_id_base> objects;
+        objects.push_back(e.m_player);
+        objects.push_back(e.m_character);
+        mvc::emit<mvc::event_run_named_script>(*this, 
+            mvc::event_run_named_script("talk_to_character", objects, std::vector<std::string>()));
       }
 
       void ask_character(const event_ask_character &e)
       {
+        m_logger(mvc::logger::info, "ask_character event called");
+        std::vector<mvc::object_id_base> objects;
+        objects.push_back(e.m_player);
+        objects.push_back(e.m_character);
+        std::vector<std::string> strings;
+        strings.push_back(e.m_question);
+        mvc::emit<mvc::event_run_named_script>(*this, 
+            mvc::event_run_named_script("ask_character", objects, strings));
       }
 
       void move_to(const event_move_to &e)
       {
+        m_logger(mvc::logger::info, "move_to event called");
+        std::vector<mvc::object_id_base> objects;
+        objects.push_back(e.m_player);
+        objects.push_back(e.m_place);
+        mvc::emit<mvc::event_run_named_script>(*this, 
+            mvc::event_run_named_script("move_to", objects, std::vector<std::string>()));
       }
 
       boost::function<void (mvc::logger::log_level, const std::string &)> m_logger;
