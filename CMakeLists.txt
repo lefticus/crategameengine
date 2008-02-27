@@ -29,3 +29,12 @@ TARGET_LINK_LIBRARIES (crategameengine debug ${LINK_LIBS_DEBUG} optimized ${LINK
 IF (DOXYGEN_FOUND)
   ADD_CUSTOM_COMMAND(TARGET crategameengine POST_BUILD COMMAND ${DOXYGEN_EXECUTABLE}) 
 ENDIF (DOXYGEN_FOUND)
+
+# Stub for testing
+#ENABLE_TESTING()
+# Build a binary for each group of tests
+#ADD_EXECUTABLE (TestPersonality ${PERSONALITY_SRCS})
+#TARGET_LINK_LIBRARIES (TestPersonality debug ${LINK_LIBS_DEBUG} optimized ${LINK_LIBS_RELEASE})
+# Then add the test so the test suite can find it
+#ADD_TEST (TestPersonalityTest TestPersonality)
+# To run the test after the binaries have been built, execute 'ctest -V' in the same directory as the CMakeLists.txt
