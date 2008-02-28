@@ -429,6 +429,10 @@ namespace game_personality
           m_logger(boost::bind(t_logger, _1, "game_personality::engine", _2))
       {
         m_logger(mvc::logger::debug, "constructor called");
+
+        w.register_script(mvc::compiled_script<personality>("use_item",
+              boost::bind(&engine::use_item_impl, this, _1, _2, _3)));
+
         mvc::attach<event_take_item>(v, *this);
         mvc::attach<event_use_item>(v, *this);
         mvc::attach<event_use_item_with>(v, *this);
@@ -438,6 +442,13 @@ namespace game_personality
         mvc::attach<event_character_response>(w, v);
         mvc::attach<event_character_speak>(w, v);
         mvc::attach<event_announcement>(w, v);
+      }
+
+      void use_item_impl(mvc::world_script_access<personality> &,
+          const std::vector<mvc::object_id_base> &objects, 
+          const std::vector<std::string> &strings)
+      {
+        m_logger(mvc::logger::debug, "use_item_impl called");
       }
 
       void take_item(const event_take_item &e)

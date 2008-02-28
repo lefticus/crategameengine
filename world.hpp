@@ -65,7 +65,7 @@ namespace mvc
 
       void register_script(const script &t_s)
       {
-        m_script_handlers[t_s.type].register_named_script(t_s);
+        m_script_handlers[t_s.type]->register_named_script(t_s);
         m_named_scripts[t_s.name] = t_s.type;
       }
 
