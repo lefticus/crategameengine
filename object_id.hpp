@@ -13,9 +13,16 @@ namespace mvc
           const std::string &t_id)
         : class_name(t_class_name), id(t_id)
       {
-      };
+      }
+
 
     public:
+      object_id_base(const object_id_base &oid)
+        : class_name(oid.class_name),
+          id(oid.id)
+      {
+      }
+
       struct invalid_object_type : std::runtime_error
       {
         invalid_object_type()
@@ -53,7 +60,7 @@ namespace mvc
     {
     }
 
-    object_id(const object_id_base &oid)
+    explicit object_id(const object_id_base &oid)
       : object_id_base(oid)
     {
       if (oid.class_name != object_type::class_name) throw invalid_object_type();

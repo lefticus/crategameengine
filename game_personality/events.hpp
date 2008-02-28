@@ -56,7 +56,7 @@ namespace game_personality
     {
     }
 
-    mvc::object_id<game_object> m_player;
+    mvc::object_id<player> m_player;
     mvc::object_id<game_object> m_character;
   };
 
@@ -71,7 +71,7 @@ namespace game_personality
     {
     }
 
-    mvc::object_id<game_object> m_player;
+    mvc::object_id<player> m_player;
     mvc::object_id<game_object> m_character;
     std::string m_question;
   };
