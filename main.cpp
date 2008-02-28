@@ -15,69 +15,81 @@ class worldimpl : public game_personality::personality::world
 
     void apply_change_set(const game_personality::personality::change_set &cs)
     {
+      m_change_set.merge(cs);
     }
 
     game_personality::game_object create(const mvc::object_id<game_personality::game_object>& oid)
     {
-      return game_personality::game_object(oid);
+      game_personality::game_object o(oid);
+      m_change_set.update(o);
+      return o;
     }
 
     game_personality::environmental_object create(
         const mvc::object_id<game_personality::environmental_object>& oid)
     {
-      return game_personality::environmental_object(oid);
+      game_personality::environmental_object o(oid);
+      m_change_set.update(o);
+      return o;
     }
 
     game_personality::item create(
         const mvc::object_id<game_personality::item>& oid)
     {
-      return game_personality::item(oid);
+      game_personality::item o(oid);
+      m_change_set.update(o);
+      return o;
     }
 
     game_personality::player create(
         const mvc::object_id<game_personality::player>& oid)
     {
-      return game_personality::player(oid);
+      game_personality::player o(oid);
+      m_change_set.update(o);
+      return o;
     }
 
     game_personality::location create(
         const mvc::object_id<game_personality::location>& oid)
     {
-      return game_personality::location(oid);
+      game_personality::location o(oid);
+      m_change_set.update(o);
+      return o;
     }
 
     game_personality::game_object getobject(
         const mvc::object_id<game_personality::game_object>& oid) const
     {
-      return game_personality::game_object(oid);
+      return m_change_set.getobject(oid);
     }
 
     game_personality::environmental_object getobject(
         const mvc::object_id<game_personality::environmental_object>& oid) const
     {
-      return game_personality::environmental_object(oid);
+      return m_change_set.getobject(oid);
     }
 
     game_personality::item getobject(
         const mvc::object_id<game_personality::item>& oid) const
     {
-      return game_personality::item(oid);
+      return m_change_set.getobject(oid);
     }
 
     game_personality::player getobject(
         const mvc::object_id<game_personality::player>& oid) const
     {
-      return game_personality::player(oid);
+      return m_change_set.getobject(oid);
     }
 
     game_personality::location getobject(
         const mvc::object_id<game_personality::location>& oid) const
     {
-      return game_personality::location(oid);
+      return m_change_set.getobject(oid);
     }
 
   private:
     boost::function<void (mvc::logger::log_level, const std::string &)> m_logger;
+    game_personality::personality::change_set m_change_set;
 };
 
 class viewimpl : public game_personality::personality::view
@@ -138,12 +150,41 @@ int main(int, char **)
   viewimpl v(boost::bind(&mvc::logger::log, &l, _1, _2, _3));
   engineimpl e(boost::bind(&mvc::logger::log, &l, _1, _2, _3), v, w);
 
+  w.create(mvc::object_id<game_personality::player>("1"));
+  w.create(mvc::object_id<game_personality::item>("1"));
+  w.create(mvc::object_id<game_personality::item>("2"));
+  w.create(mvc::object_id<game_personality::game_object>("1"));
+  w.create(mvc::object_id<game_personality::game_object>("2"));
+
   w.start();
   v.start();
 
   mvc::emit<game_personality::event_take_item>(v, game_personality::event_take_item(
-        w.create(mvc::object_id<game_personality::player>()),
-        w.create(mvc::object_id<game_personality::item>())));
+        w.getobject(mvc::object_id<game_personality::player>("1")),
+        w.getobject(mvc::object_id<game_personality::item>("1"))));
+
+  mvc::emit<game_personality::event_use_item>(v, game_personality::event_use_item(
+        w.getobject(mvc::object_id<game_personality::player>("1")),
+        w.getobject(mvc::object_id<game_personality::item>("1"))));
+
+  mvc::emit<game_personality::event_use_item_with>(v, game_personality::event_use_item_with(
+        w.getobject(mvc::object_id<game_personality::player>("1")),
+        w.getobject(mvc::object_id<game_personality::item>("1")),
+        w.getobject(mvc::object_id<game_personality::item>("2"))));
+
+  mvc::emit<game_personality::event_talk_to_character>(v, game_personality::event_talk_to_character(
+        w.getobject(mvc::object_id<game_personality::player>("1")),
+        w.getobject(mvc::object_id<game_personality::game_object>("1"))));
+
+  mvc::emit<game_personality::event_ask_character>(v, game_personality::event_ask_character(
+        w.getobject(mvc::object_id<game_personality::player>("1")),
+        w.getobject(mvc::object_id<game_personality::game_object>("1")),
+        "what's up?"));
+
+  mvc::emit<game_personality::event_move_to>(v, game_personality::event_move_to(
+        w.getobject(mvc::object_id<game_personality::player>("1")),
+        w.getobject(mvc::object_id<game_personality::game_object>("2"))));
+
 
   e.run();
 }
