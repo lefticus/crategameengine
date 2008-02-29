@@ -20,23 +20,23 @@ namespace game_personality
           friend class properties;
 
           public:
-          lexical_cast_wrapper(wrappedtype &v)
-            : m_value(v)
-          {
-          }
+            lexical_cast_wrapper(wrappedtype &v)
+              : m_value(v)
+            {
+            }
 
-          const interfacetype operator=(const interfacetype& value)
-          {
-            m_value = boost::lexical_cast<wrappedtype>(value);
-          }
+            const interfacetype operator=(const interfacetype& value)
+            {
+              m_value = boost::lexical_cast<wrappedtype>(value);
+            }
 
-          operator const interfacetype() const
-          {
-            return boost::lexical_cast<interfacetype>(m_value);
-          }
+            operator const interfacetype() const
+            {
+              return boost::lexical_cast<interfacetype>(m_value);
+            }
 
           private:
-          wrappedtype &m_value;
+            wrappedtype &m_value;
         };
 
       using std::map<std::string, std::string>::operator[];
