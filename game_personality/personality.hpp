@@ -432,6 +432,16 @@ namespace game_personality
 
         w.register_script(mvc::compiled_script<personality>("use_item",
               boost::bind(&engine::use_item_impl, this, _1, _2, _3)));
+        w.register_script(mvc::compiled_script<personality>("use_item_with",
+              boost::bind(&engine::use_item_with_impl, this, _1, _2, _3)));
+        w.register_script(mvc::compiled_script<personality>("take_item",
+              boost::bind(&engine::take_item_impl, this, _1, _2, _3)));
+        w.register_script(mvc::compiled_script<personality>("talk_to_character",
+              boost::bind(&engine::talk_to_character_impl, this, _1, _2, _3)));
+        w.register_script(mvc::compiled_script<personality>("ask_character",
+              boost::bind(&engine::ask_character_impl, this, _1, _2, _3)));
+        w.register_script(mvc::compiled_script<personality>("move_to",
+              boost::bind(&engine::move_to_impl, this, _1, _2, _3)));
 
         mvc::attach<event_take_item>(v, *this);
         mvc::attach<event_use_item>(v, *this);
@@ -443,6 +453,42 @@ namespace game_personality
         mvc::attach<event_character_speak>(w, v);
         mvc::attach<event_announcement>(w, v);
       }
+
+      void ask_character_impl(mvc::world_script_access<personality> &,
+          const std::vector<mvc::object_id_base> &objects, 
+          const std::vector<std::string> &strings)
+      {
+        m_logger(mvc::logger::debug, "ask_character_impl called");
+      }
+
+      void talk_to_character_impl(mvc::world_script_access<personality> &,
+          const std::vector<mvc::object_id_base> &objects, 
+          const std::vector<std::string> &strings)
+      {
+        m_logger(mvc::logger::debug, "talk_to_character_impl called");
+      }
+
+      void move_to_impl(mvc::world_script_access<personality> &,
+          const std::vector<mvc::object_id_base> &objects, 
+          const std::vector<std::string> &strings)
+      {
+        m_logger(mvc::logger::debug, "move_to_impl called");
+      }
+
+      void take_item_impl(mvc::world_script_access<personality> &,
+          const std::vector<mvc::object_id_base> &objects, 
+          const std::vector<std::string> &strings)
+      {
+        m_logger(mvc::logger::debug, "take_item_impl called");
+      }
+
+      void use_item_with_impl(mvc::world_script_access<personality> &,
+          const std::vector<mvc::object_id_base> &objects, 
+          const std::vector<std::string> &strings)
+      {
+        m_logger(mvc::logger::debug, "use_item_with_impl called");
+      }
+
 
       void use_item_impl(mvc::world_script_access<personality> &,
           const std::vector<mvc::object_id_base> &objects, 
