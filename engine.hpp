@@ -33,8 +33,6 @@ namespace mvc
     private:
       boost::function<void (logger::log_level, const std::string &)> m_logger;
 
-    protected:
-      typename world_personality::world_view_access m_wvi;
   };
 }
 

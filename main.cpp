@@ -124,6 +124,7 @@ class viewimpl : public game_personality::personality::view
 
     void announcement(const game_personality::event_announcement&)
     {
+      m_logger(mvc::logger::debug, "announcement event");
     }
 };
 

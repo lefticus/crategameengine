@@ -73,6 +73,7 @@ namespace mvc
 
     protected:
 
+
       void execute_named_script(const event_run_named_script &e)
       {
         m_logger(logger::info, "execute named script event: " + e.name);

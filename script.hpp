@@ -87,12 +87,12 @@ namespace mvc
 
       virtual void register_named_script(const script &s) = 0;
       virtual void execute_named_script(const std::string &, 
-          world_script_access<T> &world, 
+          typename world_personality::world_script_access &world,
           const std::vector<object_id_base> &objects, 
           const std::vector<std::string> &strings) = 0;
 
       virtual void execute(const script &, 
-          world_script_access<T> &world,
+          typename world_personality::world_script_access &world,
           const std::vector<object_id_base> &objects,
           const std::vector<std::string> &strings) = 0;
 
@@ -109,7 +109,7 @@ namespace mvc
       typedef T world_personality;
 
       compiled_script(const std::string &name, 
-          const boost::function<void (world_script_access<T> &, 
+          const boost::function<void (typename world_personality::world_script_access &, 
             const std::vector<object_id_base> &,
             const std::vector<std::string> &)> &action)
         : script("compiled", name, ""), m_action(action)
@@ -120,7 +120,7 @@ namespace mvc
       {
       }
 
-      void execute(world_script_access<T> &world, 
+      void execute(typename world_personality::world_script_access &world, 
           const std::vector<object_id_base> &objects,
           const std::vector<std::string> &strings) const
       {
@@ -128,7 +128,7 @@ namespace mvc
       }
 
     private:
-      boost::function<void (world_script_access<T> &, 
+      boost::function<void (typename world_personality::world_script_access &, 
           const std::vector<object_id_base> &,
           const std::vector<std::string> &)> m_action;
   };
@@ -175,7 +175,7 @@ namespace mvc
 
       virtual void execute_named_script(
           const std::string &name, 
-          world_script_access<T> &world, 
+          typename world_personality::world_script_access &world, 
           const std::vector<object_id_base> &objects,
           const std::vector<std::string> &strings)
       {
@@ -191,7 +191,7 @@ namespace mvc
       }
 
       virtual void execute(const script &script, 
-          world_script_access<T> &world, 
+          typename world_personality::world_script_access &world, 
           const std::vector<object_id_base> &objects,
           const std::vector<std::string> &strings) 
       {

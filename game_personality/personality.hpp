@@ -18,7 +18,6 @@
 
 namespace game_personality
 {
-
   template<typename T, typename T2, typename Iterator>
   void merge(std::map<T, T2> &dest, Iterator begin, Iterator end)
   {
@@ -227,6 +226,7 @@ namespace game_personality
           m_changeset.merge(cs);
         }
 
+
         virtual game_object getobject(const mvc::object_id<game_object> &oid) const
         {
           return m_changeset.getobject(oid); 
@@ -274,6 +274,22 @@ namespace game_personality
           }
 
       public:
+
+        void emit(const event_character_response &e)
+        {
+          mvc::emit<event_character_response>(m_world, e);
+        }
+
+        void emit(const event_character_speak &e)
+        {
+          mvc::emit<event_character_speak>(m_world, e);
+        }
+
+        void emit(const event_announcement &e)
+        {
+          mvc::emit<event_announcement>(m_world, e);
+        }
+
         change_set get_change_set()
         {
           return m_changeset;
@@ -454,35 +470,38 @@ namespace game_personality
         mvc::attach<event_announcement>(w, v);
       }
 
-      void ask_character_impl(mvc::world_script_access<personality> &,
+      void ask_character_impl(world_script_access &w,
           const std::vector<mvc::object_id_base> &objects, 
           const std::vector<std::string> &strings)
       {
         m_logger(mvc::logger::debug, "ask_character_impl called");
+        std::vector<std::string> messages;
+        messages.push_back("blah");
+        w.emit(event_announcement(messages));
       }
 
-      void talk_to_character_impl(mvc::world_script_access<personality> &,
+      void talk_to_character_impl(world_script_access &,
           const std::vector<mvc::object_id_base> &objects, 
           const std::vector<std::string> &strings)
       {
         m_logger(mvc::logger::debug, "talk_to_character_impl called");
       }
 
-      void move_to_impl(mvc::world_script_access<personality> &,
+      void move_to_impl(world_script_access &,
           const std::vector<mvc::object_id_base> &objects, 
           const std::vector<std::string> &strings)
       {
         m_logger(mvc::logger::debug, "move_to_impl called");
       }
 
-      void take_item_impl(mvc::world_script_access<personality> &,
+      void take_item_impl(world_script_access &,
           const std::vector<mvc::object_id_base> &objects, 
           const std::vector<std::string> &strings)
       {
         m_logger(mvc::logger::debug, "take_item_impl called");
       }
 
-      void use_item_with_impl(mvc::world_script_access<personality> &,
+      void use_item_with_impl(world_script_access &,
           const std::vector<mvc::object_id_base> &objects, 
           const std::vector<std::string> &strings)
       {
@@ -490,7 +509,7 @@ namespace game_personality
       }
 
 
-      void use_item_impl(mvc::world_script_access<personality> &,
+      void use_item_impl(world_script_access &,
           const std::vector<mvc::object_id_base> &objects, 
           const std::vector<std::string> &strings)
       {
