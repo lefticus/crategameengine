@@ -2,9 +2,9 @@
 #define __mvc_world__
 
 #include "logger.hpp"
-#include <script.hpp>
-#include <event.hpp>
-#include <mvc_events.hpp>
+#include "script.hpp"
+#include "event.hpp"
+#include "mvc_events.hpp"
 #include <boost/shared_ptr.hpp>
 
 namespace mvc

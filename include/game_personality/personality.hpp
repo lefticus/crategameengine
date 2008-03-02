@@ -3,17 +3,17 @@
 
 #include "events.hpp"
 #include "objects.hpp"
-#include "logger.hpp"
+#include "mvc/logger.hpp"
 
-#include "object_id.hpp"
+#include "mvc/object_id.hpp"
 
 #include <string>
 #include <boost/lexical_cast.hpp>
 #include <set>
 #include <map>
-#include "world.hpp"
-#include "view.hpp"
-#include "engine.hpp"
+#include "mvc/world.hpp"
+#include "mvc/view.hpp"
+#include "mvc/engine.hpp"
 
 
 namespace game_personality

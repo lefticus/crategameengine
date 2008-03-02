@@ -1,8 +1,8 @@
 #ifndef __mvc_view__
 #define __mvc_view__
 
-#include <script.hpp>
-#include <event.hpp>
+#include "script.hpp"
+#include "event.hpp"
 #include "logger.hpp"
 
 namespace mvc

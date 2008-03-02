@@ -1,4 +1,4 @@
-#include "personality.hpp"
+#include "game_personality/personality.hpp"
 
 namespace game_personality
 {

@@ -1,8 +1,8 @@
 #ifndef __game_personality_objects_hpp__
 #define __game_personality_objects_hpp__
 
-#include "object_id.hpp"
-#include "script.hpp"
+#include "mvc/object_id.hpp"
+#include "mvc/script.hpp"
 
 #include <string>
 #include <boost/lexical_cast.hpp>
