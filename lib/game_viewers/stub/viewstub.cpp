@@ -33,3 +33,15 @@ namespace game_viewers
   }
 }
 
+extern "C" game_personality::personality::view* create(
+    const boost::function<void (mvc::logger::log_level,
+      const std::string&, const std::string &)> &t_logger)
+{
+  return new game_viewers::viewstub(t_logger);
+}
+
+extern "C" void destroy(game_personality::personality::view *t_w)
+{
+  delete t_w;
+}
+

@@ -11,6 +11,8 @@ IF (APPLE)
   INCLUDE_DIRECTORIES (/usr/local/include/boost-1_34)
 ENDIF (APPLE)
 
+
+
 FIND_LIBRARY(BOOST_THREAD_LIBRARY_DEBUG NAMES boost_thread-mt-d boost_thread-d 
   PATHS  /usr/lib /usr/local/lib)
 
@@ -43,16 +45,21 @@ ELSE(BOOST_THREAD_LIBRARY_RELEASE)
   SET (LINK_LIBS_RELEASE ${BOOST_THREAD_LIBRARY_DEBUG})
 ENDIF(BOOST_THREAD_LIBRARY_RELEASE)
 
+FILE (GLOB PERSONALITY_SRCS lib/game_personality/*.cpp)
+FILE (GLOB GAME_ENGINE_SRCS lib/game_engine/*.cpp)
+FILE (GLOB MEMORY_WORLD_SRCS lib/game_worlds/memory/*.cpp)
+FILE (GLOB VIEWER_STUB_SRCS lib/game_viewers/stub/*.cpp)
 
-#SET (PERSONALITY_SRCS game_personality/personality.cpp)
-#SET (MAIN_SRCS main.cpp)
-FILE (GLOB LIBS_SRCS lib/game_personality/*.cpp lib/game_engine/*.cpp
-  lib/game_worlds/memory/*.cpp lib/game_viewers/stub/*.cpp)
+ADD_LIBRARY (game_personality SHARED ${PERSONALITY_SRCS})
+ADD_LIBRARY (game_engine MODULE ${GAME_ENGINE_SRCS})
+ADD_LIBRARY (memory_world MODULE ${MEMORY_WORLD_SRCS})
+ADD_LIBRARY (viewerstub MODULE ${VIEWER_STUB_SRCS})
+
 FILE (GLOB MAIN_SRCS game_loader/*.cpp)
 
 INCLUDE_DIRECTORIES (./include ./lib)
 ADD_EXECUTABLE (crategameengine ${MAIN_SRCS} ${LIBS_SRCS})
-TARGET_LINK_LIBRARIES (crategameengine debug ${LINK_LIBS_DEBUG} optimized ${LINK_LIBS_RELEASE})
+TARGET_LINK_LIBRARIES (crategameengine dl game_personality  debug ${LINK_LIBS_DEBUG} optimized ${LINK_LIBS_RELEASE})
 IF (DOXYGEN_FOUND)
   ADD_CUSTOM_COMMAND(TARGET crategameengine POST_BUILD COMMAND ${DOXYGEN_EXECUTABLE}) 
 ENDIF (DOXYGEN_FOUND)

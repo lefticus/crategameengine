@@ -88,3 +88,15 @@ namespace game_worlds
 
 }
 
+extern "C" game_personality::personality::world* create(
+    const boost::function<void (mvc::logger::log_level,
+      const std::string&, const std::string &)> &t_logger)
+{
+  return new game_worlds::memoryworld(t_logger);
+}
+
+extern "C" void destroy(game_personality::personality::world *t_w)
+{
+  delete t_w;
+}
+
