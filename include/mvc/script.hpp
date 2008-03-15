@@ -36,7 +36,7 @@ namespace mvc
   class world_script_access
   {
     public: 
-      typedef T world_personality;
+      typedef T change_set;
 
       virtual ~world_script_access()
       {
@@ -50,7 +50,7 @@ namespace mvc
           const std::vector<object_id_base> &objects,
           const std::vector<std::string> &strings) = 0;
 
-      virtual typename world_personality::change_set get_change_set() = 0;
+      virtual change_set get_change_set() = 0;
 
   };
 
