@@ -3,6 +3,7 @@
 
 #include "world_reader.hpp"
 #include "world_writer.hpp"
+#include "world_change_set.hpp"
 #include "mvc/script.hpp"
 
 
