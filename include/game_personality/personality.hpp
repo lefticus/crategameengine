@@ -3,7 +3,12 @@
 
 #include "events.hpp"
 #include "objects.hpp"
-#include "personality_interfaces.hpp"
+#include "world_change_set.hpp"
+#include "world_reader.hpp"
+#include "world_writer.hpp"
+#include "world_script_access.hpp"
+#include "world_creator.hpp"
+
 #include "mvc/logger.hpp"
 
 #include "mvc/object_id.hpp"

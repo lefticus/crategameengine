@@ -1,8 +1,10 @@
-#ifndef __game_personality_personality_hpp__
-#define __game_personality_personality_hpp__
+#ifndef __game_personality_world_change_set_hpp__
+#define __game_personality_world_change_set_hpp__
 
 #include "events.hpp"
 #include "objects.hpp"
+#include "world_reader.hpp"
+#include "world_writer.hpp"
 #include "mvc/logger.hpp"
 
 #include "mvc/object_id.hpp"
@@ -31,59 +33,7 @@ namespace game_personality
     dest.insert(begin, end);
   }
 
-  struct world_writer
-  {
-    virtual ~world_writer()
-    {
-    }
-
-    virtual void update(const game_object &) = 0;
-    virtual void update(const environmental_object &) = 0;
-    virtual void update(const item &) = 0;
-    virtual void update(const player &) = 0;
-    virtual void update(const location &) = 0;
-  };
-
-
-  struct world_reader
-  {
-    virtual ~world_reader()
-    {
-    }
-
-    virtual game_object getobject(const mvc::object_id<game_object> &oid) const = 0;
-    virtual environmental_object getobject(const mvc::object_id<environmental_object> &oid) const = 0;
-    virtual item getobject(const mvc::object_id<item> &oid) const = 0;
-    virtual player getobject(const mvc::object_id<player> &oid) const = 0;
-    virtual location getobject(const mvc::object_id<location> &oid) const = 0;
-
-    game_object get_game_object(const mvc::object_id_base &oid) const
-    {
-      return getobject(mvc::object_id<game_object>(oid));
-    }
-
-    environmental_object get_environmental_object(const mvc::object_id_base &oid) const
-    {
-      return getobject(mvc::object_id<environmental_object>(oid));
-    }
-
-    item get_item(const mvc::object_id_base &oid) const
-    {
-      return getobject(mvc::object_id<item>(oid));
-    }
-
-    player get_player(const mvc::object_id_base &oid) const
-    {
-      return getobject(mvc::object_id<player>(oid));
-    }
-
-    location get_location(const mvc::object_id_base &oid) const
-    {
-      return getobject(mvc::object_id<location>(oid));
-    }
-  };    
-
-  struct world_change_set : game_personality::world_reader, world_writer
+  struct world_change_set : world_reader, world_writer
   {
     private:
       std::map<mvc::object_id<game_object>, game_object> gameobjects;
@@ -198,23 +148,6 @@ namespace game_personality
       }
   };
 
-  class world_script_access : public world_reader, public world_writer, 
-                              public mvc::world_script_access<world_change_set>
-  {
-  };
-
-  struct world_creator
-  {
-    virtual ~world_creator()
-    {
-    }
-
-    virtual game_object create(const mvc::object_id<game_object> &oid) = 0;
-    virtual environmental_object create(const mvc::object_id<environmental_object> &oid) = 0;
-    virtual item create(const mvc::object_id<item> &oid) = 0;
-    virtual player create(const mvc::object_id<player> &oid) = 0;
-    virtual location create(const mvc::object_id<location> &oid) = 0;
-  };
 }
 
 #endif
