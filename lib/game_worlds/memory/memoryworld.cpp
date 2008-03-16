@@ -3,16 +3,16 @@
 namespace game_worlds
 {
   memoryworld::memoryworld(
-      const boost::function<void (mvc::logger::log_level, const std::string &, const std::string &)> 
-              &t_logger)
-    : game_personality::personality::world(t_logger),
+      const boost::function<void (mvc::logger::log_level, 
+        const std::string &, const std::string &)> &t_logger)
+    : game_personality::world(t_logger),
       m_logger(boost::bind(t_logger, _1, "memoryworld", _2))
   {
     m_logger(mvc::logger::debug, "constructor called");
   }
 
 
-  void memoryworld::apply_change_set(const game_personality::personality::change_set &cs)
+  void memoryworld::apply_change_set(const game_personality::world_change_set &cs)
   {
     m_change_set.merge(cs);
   }
@@ -88,14 +88,14 @@ namespace game_worlds
 
 }
 
-extern "C" game_personality::personality::world* create(
+extern "C" game_personality::world* create(
     const boost::function<void (mvc::logger::log_level,
       const std::string&, const std::string &)> &t_logger)
 {
   return new game_worlds::memoryworld(t_logger);
 }
 
-extern "C" void destroy(game_personality::personality::world *t_w)
+extern "C" void destroy(game_personality::world *t_w)
 {
   delete t_w;
 }

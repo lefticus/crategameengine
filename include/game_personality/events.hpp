@@ -1,10 +1,51 @@
 #ifndef __game_personality_events_h__
 #define __game_personality_events_h__
 
+#include "mvc/object_id.hpp"
 #include "objects.hpp"
+#include "world_change_set.hpp"
+#include "script.hpp"
 
 namespace game_personality
 {
+  struct event_world_changed
+  {
+    event_world_changed(const world_change_set &cs)
+      : change_set(cs)
+    {
+    }
+
+    world_change_set change_set;
+  };
+
+  struct event_run_script
+  {
+    event_run_script(const script &t_s,
+                     const std::vector<mvc::object_id_base> &t_objects,
+                     const std::vector<std::string> &t_strings)
+      : script_to_run(t_s), objects(t_objects), strings(t_strings)
+    {
+    }
+
+    script script_to_run;
+    std::vector<mvc::object_id_base> objects;
+    std::vector<std::string> strings;
+  };
+
+  struct event_run_named_script
+  {
+    event_run_named_script(const std::string &t_name,
+                     const std::vector<mvc::object_id_base> &t_objects,
+                     const std::vector<std::string> &t_strings)
+      : name(t_name), objects(t_objects), strings(t_strings)
+    {
+    }
+
+    std::string name;
+    std::vector<mvc::object_id_base> objects;
+    std::vector<std::string> strings;
+  };
+
   struct event_take_item
   {
     event_take_item(const mvc::object_id<player> &t_player,

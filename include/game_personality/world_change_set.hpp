@@ -1,21 +1,14 @@
 #ifndef __game_personality_world_change_set_hpp__
 #define __game_personality_world_change_set_hpp__
 
-#include "events.hpp"
 #include "objects.hpp"
 #include "world_reader.hpp"
 #include "world_writer.hpp"
 #include "mvc/logger.hpp"
-
 #include "mvc/object_id.hpp"
+#include "world_exceptions.hpp"
 
-#include <string>
-#include <boost/lexical_cast.hpp>
-#include <set>
 #include <map>
-#include "mvc/world.hpp"
-#include "mvc/view.hpp"
-#include "mvc/engine.hpp"
 
 
 namespace game_personality
@@ -51,7 +44,7 @@ namespace game_personality
           {
             return itr->second;
           } else {
-            throw mvc::object_not_found(oid);
+            throw object_not_found(oid);
           }
         }
 

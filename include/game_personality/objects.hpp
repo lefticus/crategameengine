@@ -2,7 +2,7 @@
 #define __game_personality_objects_hpp__
 
 #include "mvc/object_id.hpp"
-#include "mvc/script.hpp"
+#include "script.hpp"
 
 #include <string>
 #include <boost/lexical_cast.hpp>
@@ -64,7 +64,7 @@ namespace game_personality
       properties viewproperties;
       properties scriptproperties;
 
-      mvc::script usescript;
+      script usescript;
   };
 
   struct position
@@ -103,8 +103,8 @@ namespace game_personality
       mvc::object_id<location> linkedlocation;
       position linkedpositionatlocation;
 
-      mvc::script enterscript;
-      mvc::script leavescript;
+      script enterscript;
+      script leavescript;
   };
 
   class environmental_object

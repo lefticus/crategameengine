@@ -1,7 +1,9 @@
 #include "mvc/logger.hpp"
 #include <dlfcn.h>
 
-#include "game_personality/personality.hpp"
+#include "game_personality/view.hpp"
+#include "game_personality/world.hpp"
+#include "game_personality/engine.hpp"
 
 
 class module_holder
@@ -87,20 +89,20 @@ class game_module
 class game_engine_module
 {
   public:
-    typedef game_personality::personality::engine* (*create_type)(
+    typedef game_personality::engine* (*create_type)(
         const boost::function<void (mvc::logger::log_level,
         const std::string&, const std::string &)> &,
-        game_personality::personality::view &,
-        game_personality::personality::world &);
+        game_personality::view &,
+        game_personality::world &);
 
-    typedef void (*destroy_type)(game_personality::personality::engine *);
+    typedef void (*destroy_type)(game_personality::engine *);
 
     game_engine_module(
         const std::string &modname,
         const boost::function<void (mvc::logger::log_level,
           const std::string&, const std::string &)> &logfunc,
-        game_personality::personality::view &v,
-        game_personality::personality::world &w)
+        game_personality::view &v,
+        game_personality::world &w)
       : m_game_engine_mod(modname),
         m_create(m_game_engine_mod.get_function<create_type>("create")),
         m_destroy(m_game_engine_mod.get_function<destroy_type>("destroy")),
@@ -115,7 +117,7 @@ class game_engine_module
     }
 
 
-    game_personality::personality::engine *operator->() const 
+    game_personality::engine *operator->() const 
     {
       return m_engine;
     }
@@ -126,7 +128,7 @@ class game_engine_module
     create_type m_create;
     destroy_type m_destroy;
 
-    game_personality::personality::engine *m_engine;
+    game_personality::engine *m_engine;
 
 };
 
@@ -137,8 +139,8 @@ int main(int, char **)
   boost::function<void (mvc::logger::log_level, const std::string &, const std::string &)>
     logger_func(boost::bind(&mvc::logger::log, &l, _1, _2, _3));
 
-  game_module<game_personality::personality::world> w("./libmemory_world.so", logger_func);
-  game_module<game_personality::personality::view> v("./libviewerstub.so", logger_func);
+  game_module<game_personality::world> w("./libmemory_world.so", logger_func);
+  game_module<game_personality::view> v("./libviewerstub.so", logger_func);
 
   game_engine_module e("./libgame_engine.so", logger_func, *v, *w);
 
