@@ -6,8 +6,9 @@
 
 namespace game_personality
 {
-  struct world_reader
+  class world_reader
   {
+    public:
     virtual ~world_reader()
     {
     }

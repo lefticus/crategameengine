@@ -26,7 +26,7 @@ namespace game_personality
     dest.insert(begin, end);
   }
 
-  struct world_change_set : world_reader, world_writer
+  class world_change_set : public world_reader, public world_writer
   {
     private:
       std::map<mvc::object_id<game_object>, game_object> gameobjects;

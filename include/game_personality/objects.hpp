@@ -14,6 +14,7 @@ namespace game_personality
   class properties : private std::map<std::string, std::string>
   {
     public:
+      /*
       template<typename wrappedtype, typename interfacetype>
         class lexical_cast_wrapper
         {
@@ -46,6 +47,7 @@ namespace game_personality
         {
           return lexical_cast_wrapper<std::string, T>(operator[](key));
         }
+        */
   };
 
   class item

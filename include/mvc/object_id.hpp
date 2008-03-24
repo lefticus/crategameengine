@@ -23,6 +23,13 @@ namespace mvc
       {
       }
 
+      object_id_base()
+        : class_name(""),
+          id("")
+      {
+      }
+
+
       struct invalid_object_type : std::runtime_error
       {
         invalid_object_type()

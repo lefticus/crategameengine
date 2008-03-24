@@ -44,8 +44,9 @@ namespace game_personality
     public:
       typedef std::map<std::string, compiled_script> script_map;
 
-      compiled_script_handler()
-        : script_handler("compiled")
+      compiled_script_handler(const boost::function<void (mvc::logger::log_level, 
+          const std::string &, const std::string &)> &t_logger)
+        : script_handler("compiled", t_logger)
       {
       }
 

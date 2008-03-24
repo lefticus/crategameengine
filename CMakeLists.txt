@@ -59,7 +59,7 @@ FILE (GLOB MAIN_SRCS game_loader/*.cpp)
 
 INCLUDE_DIRECTORIES (./include ./lib)
 ADD_EXECUTABLE (crategameengine ${MAIN_SRCS} ${LIBS_SRCS})
-TARGET_LINK_LIBRARIES (crategameengine dl game_personality  debug ${LINK_LIBS_DEBUG} optimized ${LINK_LIBS_RELEASE})
+TARGET_LINK_LIBRARIES (crategameengine dl game_personality lua  debug ${LINK_LIBS_DEBUG} optimized ${LINK_LIBS_RELEASE})
 IF (DOXYGEN_FOUND)
   ADD_CUSTOM_COMMAND(TARGET crategameengine POST_BUILD COMMAND ${DOXYGEN_EXECUTABLE}) 
 ENDIF (DOXYGEN_FOUND)

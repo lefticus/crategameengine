@@ -40,7 +40,7 @@ namespace game_personality
     {
       m_logger(mvc::logger::debug, "constructor called");
 
-      w.register_script_handler(compiled_script_handler());
+      w.register_script_handler(compiled_script_handler(t_logger));
 
       w.register_script(compiled_script("use_item",
             boost::bind(&engine::use_item_impl, this, _1, _2, _3)));

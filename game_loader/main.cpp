@@ -5,6 +5,7 @@
 #include "game_personality/world.hpp"
 #include "game_personality/engine.hpp"
 
+#include "game_script_handlers/lua_handler/lua_handler.hpp"
 
 class module_holder
 {

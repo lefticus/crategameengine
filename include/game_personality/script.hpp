@@ -3,8 +3,11 @@
 
 #include <string>
 #include "mvc/object_id.hpp"
+#include "mvc/logger.hpp"
 #include <vector>
 #include <boost/shared_ptr.hpp>
+#include <boost/function.hpp>
+#include <boost/bind.hpp>
 
 namespace game_personality
 {
@@ -36,8 +39,10 @@ namespace game_personality
   class script_handler
   {
     public:
-      script_handler(const std::string &t_name)
-        : name(t_name)
+      script_handler(const std::string &t_name, 
+          const boost::function<void (mvc::logger::log_level, 
+           const std::string &, const std::string &)> &t_logger)
+        : name(t_name), m_logger(boost::bind(t_logger, _1, "script_handler:" + t_name, _2))
       {
       }
 
@@ -74,7 +79,9 @@ namespace game_personality
 
       virtual boost::shared_ptr<script_handler> clone() const = 0;
 
-      std::string name;
+      const std::string name;
+
+      boost::function<void (mvc::logger::log_level, const std::string &)> m_logger;
   };
 }
 
