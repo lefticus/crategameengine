@@ -39,9 +39,9 @@ namespace game_personality
       {
       }
 
-      void register_script_handler(const script_handler &t_sh)
+      void register_script_handler(script_handler *t_sh)
       {
-        m_script_handlers[t_sh.name] = boost::shared_ptr<script_handler>(t_sh.clone());
+        m_script_handlers[t_sh->name] = t_sh;
       }
 
       void register_script(const script &t_s)
@@ -96,7 +96,7 @@ namespace game_personality
           event_world_changed(cs));
       }
 
-      std::map<std::string, boost::shared_ptr<script_handler> > m_script_handlers;
+      std::map<std::string, script_handler*> m_script_handlers;
       std::map<std::string, std::string> m_named_scripts;
 
     private:

@@ -35,9 +35,9 @@ namespace game_personality
     public:
       world_script_access(world &w);
 
-      void emit(const event_character_response &e);
-      void emit(const event_character_speak &e);
-      void emit(const event_announcement &e);
+      void emit(const game_personality::event_character_response &e);
+      void emit(const game_personality::event_character_speak &e);
+      void emit(const game_personality::event_announcement &e);
 
       world_change_set get_change_set();
 

@@ -4,8 +4,9 @@
 #include "game_personality/view.hpp"
 #include "game_personality/world.hpp"
 #include "game_personality/engine.hpp"
+#include "game_personality/script.hpp"
 
-#include "game_script_handlers/lua_handler/lua_handler.hpp"
+//#include "game_script_handlers/lua_handler/lua_handler.hpp"
 
 class module_holder
 {
@@ -142,6 +143,7 @@ int main(int, char **)
 
   game_module<game_personality::world> w("./libmemory_world.so", logger_func);
   game_module<game_personality::view> v("./libviewerstub.so", logger_func);
+  game_module<game_personality::script_handler> lua("./liblua_handler.so", logger_func);
 
   game_engine_module e("./libgame_engine.so", logger_func, *v, *w);
 
@@ -150,7 +152,6 @@ int main(int, char **)
   w->create(mvc::object_id<game_personality::item>("2"));
   w->create(mvc::object_id<game_personality::game_object>("1"));
   w->create(mvc::object_id<game_personality::game_object>("2"));
-
 
   w->start();
   v->start();

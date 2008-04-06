@@ -1,1 +1,1 @@
-%include "world_script_access.i"
+%include "../../../include/game_personality/world_script_access.i"

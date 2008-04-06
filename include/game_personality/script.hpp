@@ -77,8 +77,6 @@ namespace game_personality
           const std::vector<mvc::object_id_base> &objects,
           const std::vector<std::string> &strings) = 0;
 
-      virtual boost::shared_ptr<script_handler> clone() const = 0;
-
       const std::string name;
 
       boost::function<void (mvc::logger::log_level, const std::string &)> m_logger;

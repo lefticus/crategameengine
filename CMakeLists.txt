@@ -1,5 +1,8 @@
 PROJECT (crategameengine)
 
+FIND_PACKAGE (SWIG REQUIRED)
+INCLUDE (${SWIG_USE_FILE})
+
 INCLUDE (FindDoxygen)
 
 IF (CMAKE_COMPILER_IS_GNUCXX)
@@ -11,6 +14,7 @@ IF (APPLE)
   INCLUDE_DIRECTORIES (/usr/local/include/boost-1_34)
 ENDIF (APPLE)
 
+INCLUDE_DIRECTORIES (${CMAKE_CURRENT_BINARY_DIR})
 
 
 FIND_LIBRARY(BOOST_THREAD_LIBRARY_DEBUG NAMES boost_thread-mt-d boost_thread-d 
@@ -45,21 +49,43 @@ ELSE(BOOST_THREAD_LIBRARY_RELEASE)
   SET (LINK_LIBS_RELEASE ${BOOST_THREAD_LIBRARY_DEBUG})
 ENDIF(BOOST_THREAD_LIBRARY_RELEASE)
 
+ADD_CUSTOM_COMMAND(
+  OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/world_script_access_wrap.hxx
+  COMMAND swig -lua -nodefaultctor -c++ -o ${CMAKE_CURRENT_BINARY_DIR}/world_script_access_wrap.hxx lib/game_script_handlers/lua_handler/lua.i
+  DEPENDS lib/game_script_handlers/lua_handler/lua.i lib/game_script_handlers/lua_handler/lua_handler.cpp
+  )
+
 FILE (GLOB PERSONALITY_SRCS lib/game_personality/*.cpp)
 FILE (GLOB GAME_ENGINE_SRCS lib/game_engine/*.cpp)
 FILE (GLOB MEMORY_WORLD_SRCS lib/game_worlds/memory/*.cpp)
 FILE (GLOB VIEWER_STUB_SRCS lib/game_viewers/stub/*.cpp)
+FILE (GLOB LUA_HANDLER_SRCS lib/game_script_handlers/lua_handler/*.cpp)
+
 
 ADD_LIBRARY (game_personality SHARED ${PERSONALITY_SRCS})
 ADD_LIBRARY (game_engine MODULE ${GAME_ENGINE_SRCS})
 ADD_LIBRARY (memory_world MODULE ${MEMORY_WORLD_SRCS})
 ADD_LIBRARY (viewerstub MODULE ${VIEWER_STUB_SRCS})
+ADD_LIBRARY (lua_handler MODULE ${CMAKE_CURRENT_BINARY_DIR}/world_script_access_wrap.hxx ${LUA_HANDLER_SRCS})
 
-FILE (GLOB MAIN_SRCS game_loader/*.cpp)
+#SET(CMAKE_SWIG_FLAGS "")
+
+#SET_SOURCE_FILES_PROPERTIES(lib/game_script_handlers/lua_handler/lua.i PROPERTIES CPLUSPLUS ON)
+#SET_SOURCE_FILES_PROPERTIES(lib/game_script_handlers/lua_handler/lua.i
+#  PROPERTIES SWIG_FLAGS "-nodefaultctor")
+
+#SWIG_ADD_MODULE(world_script_access_lua lua
+#    lib/game_script_handlers/lua_handler/lua.i
+#    lib/game_script_handlers/lua_handler/lua_handler.cpp)
+#SWIG_LINK_LIBRARIES(world_script_access_lua lua)
+
+
+
+FILE (GLOB MAIN_SRCS game_loader/*.cpp )
 
 INCLUDE_DIRECTORIES (./include ./lib)
 ADD_EXECUTABLE (crategameengine ${MAIN_SRCS} ${LIBS_SRCS})
-TARGET_LINK_LIBRARIES (crategameengine dl game_personality lua  debug ${LINK_LIBS_DEBUG} optimized ${LINK_LIBS_RELEASE})
+TARGET_LINK_LIBRARIES (crategameengine dl game_personality lua debug ${LINK_LIBS_DEBUG} optimized ${LINK_LIBS_RELEASE})
 IF (DOXYGEN_FOUND)
   ADD_CUSTOM_COMMAND(TARGET crategameengine POST_BUILD COMMAND ${DOXYGEN_EXECUTABLE}) 
 ENDIF (DOXYGEN_FOUND)

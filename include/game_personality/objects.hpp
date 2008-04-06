@@ -11,10 +11,12 @@
 
 namespace game_personality
 {
+
+  
   class properties : private std::map<std::string, std::string>
   {
+    /*
     public:
-      /*
       template<typename wrappedtype, typename interfacetype>
         class lexical_cast_wrapper
         {
@@ -66,7 +68,7 @@ namespace game_personality
       properties viewproperties;
       properties scriptproperties;
 
-      script usescript;
+      game_personality::script usescript;
   };
 
   struct position
@@ -105,8 +107,8 @@ namespace game_personality
       mvc::object_id<location> linkedlocation;
       position linkedpositionatlocation;
 
-      script enterscript;
-      script leavescript;
+      game_personality::script enterscript;
+      game_personality::script leavescript;
   };
 
   class environmental_object

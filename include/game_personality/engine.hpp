@@ -36,11 +36,12 @@ namespace game_personality
         mvc::event_listener<event_move_to>(
           boost::bind(&engine::queue_event, this, _1), boost::bind(&engine::move_to, this, _1)),
         mvc::event_handler(boost::bind(t_logger, _1, "mvc::view::event_handler", _2)),
+        m_compiled_script_handler(t_logger),
         m_logger(boost::bind(t_logger, _1, "game_personality::engine", _2))
     {
       m_logger(mvc::logger::debug, "constructor called");
 
-      w.register_script_handler(compiled_script_handler(t_logger));
+      w.register_script_handler(&m_compiled_script_handler);
 
       w.register_script(compiled_script("use_item",
             boost::bind(&engine::use_item_impl, this, _1, _2, _3)));
@@ -179,6 +180,8 @@ namespace game_personality
       mvc::emit<event_run_named_script>(*this, 
           event_run_named_script("move_to", objects, std::vector<std::string>()));
     }
+
+    compiled_script_handler m_compiled_script_handler;
 
     boost::function<void (mvc::logger::log_level, const std::string &)> m_logger;
   };

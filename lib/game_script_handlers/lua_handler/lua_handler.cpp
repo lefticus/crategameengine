@@ -7,11 +7,10 @@ extern "C" {
 #include <lauxlib.h>
 }
 
-
+#include "world_script_access_wrap.hxx"
 
 namespace game_personality
 {
-#include "world_script_access_wrap.hpp"
 
   class lua_handler : public script_handler
   {
