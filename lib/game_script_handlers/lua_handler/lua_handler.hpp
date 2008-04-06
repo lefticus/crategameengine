@@ -29,7 +29,7 @@ namespace game_personality
           const std::string &, const std::string &)> &t_logger)
       : script_handler("lua", t_logger)
     {
-
+      m_logger(mvc::logger::debug, "script handler created");
     }
 
     virtual void register_named_script(const script &s)
@@ -131,6 +131,18 @@ namespace game_personality
 
     std::map<std::string, std::string> m_registered_scripts;
   };
+}
+
+extern "C" game_personality::script_handler* create(
+        const boost::function<void (mvc::logger::log_level,
+                const std::string&, const std::string &)> &t_logger)
+{
+    return new game_personality::lua_handler(t_logger);
+}
+
+extern "C" void destroy(game_personality::script_handler *t_sh)
+{
+    delete t_sh;
 }
 
 #endif
