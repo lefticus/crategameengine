@@ -1,0 +1,1 @@
+The goal is to create a game engine that is as easy to use as existing text based game engines, ie: inform. But graphical.
